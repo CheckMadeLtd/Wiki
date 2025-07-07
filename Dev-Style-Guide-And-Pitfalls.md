@@ -1,8 +1,8 @@
 # Dev Style Guide
 
 We follow Daniel's general development style guides:
-- [Practices](style_guide_practices.html)
-- [Coding Style](style_guide_code.html)
+- [Practices](style_guide_practices.md)
+- [Coding Style](style_guide_code.md)
 
 Here a short summary, details and additional aspects, see links above:
 - OOP and SOLID for the organisation of the system but with functional style code (i.e. avoiding imperative code where possible)
