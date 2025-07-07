@@ -1,19 +1,3 @@
-# Dev Style Guide
-
-We follow Daniel's general development style guides:
-- [Practices](style_guide_practices.md)
-- [Coding Style](style_guide_code.md)
-
-Here a short summary, details and additional aspects, see links above:
-- OOP and SOLID for the organisation of the system but with functional style code (i.e. avoiding imperative code where possible)
-- To support our functional style we make use of monadic wrappers: Option<T> and Result<T>. Each of these custom monadic wrappers has custom Select and Where implemented; all needed overloads for SelectMany are also implemented; this means we can chain them in LINQ queries.
-- Continuous Refactoring and Simple Design
-- Domain-Driven Design (with selective, intelligent, non-dogmatic use of e.g. GoF Design Patterns and Fowler's Analysis Patterns). 
-- Following Clean Code and Clean Architecture principles inspired e.g. by the writings of Uncle Bob
-- Vertical Slicing
-- Design by Contract (DbC) but only on the outer edges of our modules, where they interact with other modules or 3rd party libraries
-- Enabled C# Nullable Reference Types (but using Option<T> for explicitly optional values). 
-
 # Pitfalls
 
 We have encountered the following pitfalls in our project and document them to help avoid the team falling into them repeatedly.
