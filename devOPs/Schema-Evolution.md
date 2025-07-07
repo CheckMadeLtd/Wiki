@@ -1,6 +1,6 @@
 
 - - - - - - - - - - - - - - - - - -  
-For important background, first read the section on [Persistence](../Architecture---Tech---Design-Choices#iii-persistence)!
+For important background, first read the section on [Persistence](../Architecture-Tech-Design-Choices.md#iii-persistence)!
 - - - - - - - - - - - - - - - - - -  
 
 Our Domain Model will naturally evolve our time. It is reflected in both: the 'SQL Schema' and the 'JSON Details Schema' of serialised objects inside the 'details' columns in most tables.
