@@ -86,7 +86,7 @@ See [this detailed conversation](https://chat.openai.com/share/0b63fa31-cfca-44c
 `From [WUTZ4]`
 - We use a relational database (Azure Cosmos DB for PostgreSQL) but with a very flat schema:
   - Only the highest level domain aggregates / objects are represented in relational manner (e.g. festivals, camps, users, roles, messages) but all details are serialised into JSONB 'details' fields
-  - This minimises the need for risky and complex SQL migrations as the schema evolves (see also [DevOps> Schema Evolution](https://github.com/CheckMadeOrga/CheckMade/wiki/DevOps--Schema-Evolution))
+  - This minimises the need for risky and complex SQL migrations as the schema evolves (see also [DevOps> Schema Evolution](/devOPs/Schema-Evolution.md))
   - Serialising details:
     - Potentially includes lower level domain entities within aggregates
     - Includes details of higher level domain entities (aggregates)
@@ -131,7 +131,7 @@ On every function invocation the entire set of 'setup data' (i.e. everything exc
 
 Yes, this will contain a lot of setup data that won't be needed in every invocation, but since only stable, real-world entities are represented, this will be a miniscule amount of data for the function to handle on each call. Optimising this might only become necessary once we get into territory of huge commercial success. 
 
-For a useful distinction of the different object-graphs that can be constituted in-memory, depending on code flow, see notes/diagram under [Domain Model](Domain-Model).
+For a useful distinction of the different object-graphs that can be constituted in-memory, depending on code flow, see notes/diagram under [Domain Model](Domain-Model.md).
 
 ## Summary
 
