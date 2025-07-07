@@ -187,7 +187,7 @@ Encapsulates a collection of validation results/errors (e.g. to show a user ever
 
 Combined with .NET's `Task<T>` and `IEnumerable<T>`, these custom elevated types lend themselves for elegant monadic compositions and Railway Oriented Programming with the LINQ comprehension/query syntax (yes, I had to extend them with SelectMany() ('Bind' in FP-speak) overloads) - leading to workflows like the one below, which are declarative, fault-tolerant and, I find, so much more expressive compared to traditional, imperative style coding!
 
-![Monadic Workflow / ROP](assets/images/ROP_Monadic_Workflow_Example.png)
+![Monadic Workflow / ROP](../_assets/images/ROP_Monadic_Workflow_Example.png)
 
 ## Combinator Extensions
 
@@ -272,7 +272,7 @@ This guide is based on the underlying insight of the orthogonality between these
 
 ### Defining Features
 
-![Defining Features for Type Guide](assets/images/Type%20Guide%20all%20Permutations.png)
+![Defining Features for Type Guide](../_assets/images/TypeGuideAllPermutations.png)
 
 Notes:
 - Structs go on the stack only if they are not a member of a reference type. In that case they are stored on the heap together with its home object. 
