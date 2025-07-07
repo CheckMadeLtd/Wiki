@@ -2,6 +2,27 @@
 
 We have encountered the following pitfalls in our project and document them to help avoid the team falling into them repeatedly.
 
+- [Pitfalls](#pitfalls)
+  - [General](#general)
+    - [Change code-inspection severity setting for missing enums in switch expressions](#change-code-inspection-severity-setting-for-missing-enums-in-switch-expressions)
+    - [Avoid too general coverage in RetryPolicy](#avoid-too-general-coverage-in-retrypolicy)
+    - [Use DateTimeOffset for TimeStamps](#use-datetimeoffset-for-timestamps)
+    - [Avoid Singletons that hold on to Scoped Services](#avoid-singletons-that-hold-on-to-scoped-services)
+    - [Equality Operators](#equality-operators)
+    - [Avoid switch expressions for instance creation based on runtime type parameter](#avoid-switch-expressions-for-instance-creation-based-on-runtime-type-parameter)
+  - [Telegram Bot](#telegram-bot)
+    - [Avoid Telegram Bot API endless retry loop](#avoid-telegram-bot-api-endless-retry-loop)
+    - [When stuck on `502 Bad Gateway` endless loop in ngrok](#when-stuck-on-502-bad-gateway-endless-loop-in-ngrok)
+    - [Medium Length Instruction](#medium-length-instruction)
+  - [Newtonsoft Json](#newtonsoft-json)
+    - [Serializer assigns default values](#serializer-assigns-default-values)
+    - [Custom Conversions (Simple vs. ContractResolver)](#custom-conversions-simple-vs-contractresolver)
+  - [FluentAssertion (vs. xUnit Assert)](#fluentassertion-vs-xunit-assert)
+    - [Should().ThrowAsync()](#shouldthrowasync)
+    - [Lack of deep comparison with .BeEquivalentTo()](#lack-of-deep-comparison-with-beequivalentto)
+    - [Conclusion](#conclusion)
+
+
 ## General
 
 ### Change code-inspection severity setting for missing enums in switch expressions
