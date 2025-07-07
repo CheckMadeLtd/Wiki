@@ -1,0 +1,7 @@
+- Developing on macOS
+- IDE: Jetbrains Rider
+- Git + GitHub for version control, repo hosting & CI/CD
+- Using local shell (bash) scripts for some dev- and CI/CD related automation
+- Azure cloud and using the Azure CLI tool where possible. Mostly just Serverless Functions and Cosmos DBs for now, i.e. avoiding use of Docker and Kubernetes or other containerisation to keep things simple for our start-up. 
+- PostgreSQL DB locally and in cloud (via Cosmos DB) for the core operational data, but with a flat schema i.e. most details are serialised into json to minimise need for SQL migrations in a 'code first' philosophy (using Repository pattern and no O/RM). More on persistence, see under 'Architecture-Tech-Design-Choices'. 
+- Avoiding reliance on exotic, non-mainstream technologies or libraries.
