@@ -4,6 +4,8 @@ Last Update: 30/06/2025
 
 For long-lived .NET projects, I generally follow the set of approaches and paradigms described below, to help me guide the development process towards elegant and maintainable code. I'm hoping/attempting to thereby avoid the complexity trap that so easily besets software projects.
 
+test link [[style_guide_practices]]
+
 # ToC
 
 - [Coding Style](#coding-style)
