@@ -1,11 +1,6 @@
 # Coding Principles
 
-## Introduction
-
-For long-lived .NET projects, I generally follow the set of approaches and paradigms described below, to help me guide the development process towards elegant and maintainable code. I'm hoping/attempting to thereby avoid the complexity trap that so easily besets software projects.
-
 - [Coding Principles](#coding-principles)
-  - [Introduction](#introduction)
   - [Principled Code Design \& Implementation](#principled-code-design--implementation)
     - [SOLID Principles](#solid-principles)
     - [Design by Contract](#design-by-contract)

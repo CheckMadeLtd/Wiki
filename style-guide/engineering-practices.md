@@ -1,8 +1,6 @@
-# Dev & Team-Work Practices
+# Engineering & Team-Work Practices
 
-For long-lived .NET projects, I generally follow the set of approaches and paradigms described below, to help me guide the development process towards elegant and maintainable code. I'm hoping/attempting to thereby avoid the complexity trap that so easily besets software projects.
-
-- [Dev \& Team-Work Practices](#dev--team-work-practices)
+- [Engineering \& Team-Work Practices](#engineering--team-work-practices)
   - [Vertical Slicing](#vertical-slicing)
   - [Domain-Driven Design (DDD)](#domain-driven-design-ddd)
   - [Comments](#comments)

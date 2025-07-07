@@ -1,5 +1,5 @@
 - - - - - - - - - - - - - - - - - -  
-First read my [high-level CI workflow summary](../style-guide/style_guide_practices.md#continuous-integration-ci)  
+First read my [high-level CI workflow summary](../style-guide/engineering-practices.md#continuous-integration-ci)  
 - - - - - - - - - - - - - - - - - - 
 
 # Scripts supporting the CI Workflow
