@@ -42,6 +42,7 @@ For long-lived .NET projects, I generally follow the set of approaches and parad
 - [A Philosophy of Software Design vs Clean Code](https://github.com/johnousterhout/aposd-vs-clean-code/blob/main/README.md?utm_source=substack&utm_medium=email)
 - [C# in a Nutshell](https://www.goodreads.com/book/show/195616085-c-12-in-a-nutshell)
 - [Dependency Injection in .NET](https://www.goodreads.com/book/show/35055958-dependency-injection-in-net)
+- [Destroy All Software (Gary Bernhardt)](https://www.destroyallsoftware.com)
 
 ### Functional Programming 
 
