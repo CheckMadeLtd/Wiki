@@ -1,6 +1,6 @@
 # Style Guide Summary
 
-For long-lived .NET projects, I generally follow the set of approaches and paradigms described below, to help me guide the development process towards elegant and maintainable code. I'm hoping/attempting to thereby avoid the complexity trap that so easily besets software projects.
+The set of approaches and paradigms described below help guide our development process towards elegant and maintainable code. We are hoping/attempting to thereby avoid the complexity trap that so easily besets software projects.
 
 - OOP and SOLID for the organisation of the system but with functional style code (i.e. avoiding imperative code where possible)
 - Custom Result<T> monadic wrapper to enable treatment of errors and exceptions as "just another return value"
