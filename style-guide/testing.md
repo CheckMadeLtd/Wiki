@@ -16,6 +16,9 @@
   - [Focus on Potential Failures](#focus-on-potential-failures)
   - [Why no test-coverage tools?](#why-no-test-coverage-tools)
   - [What about TDD?](#what-about-tdd)
+  - [Test Implementation Guide](#test-implementation-guide)
+    - [DI/IoC Container](#diioc-container)
+    - [Mocking framework / performance](#mocking-framework--performance)
 
 
 ## Introduction
@@ -146,3 +149,17 @@ Developers can decide for themselves whether they follow Test-Driven Development
 Daniel's personal perspective:
 
 > "Despite advocacy by many of my programming heroes. This is one of the points where I side with John Ousterhout in his [epic debate](https://github.com/johnousterhout/aposd-vs-clean-code/blob/main/README.md?utm_source=substack&utm_medium=email) with Uncle Bob. In short, I found that the very tactical back- and forth between test code and production code, in seconds-long cycles as per true TDD, indeed distracted me from higher-level, design-oriented thinking in larger chunks."
+
+## Test Implementation Guide
+
+### DI/IoC Container
+
+We don't use a DI/IoC Container for the resolution of dependencies in unit tests due to the measured performance overhead of ca. 100ms per test, which becomes prohibitive with hundreds or even thousands of unit tests. Instead, pure DI and test factories. 
+
+For integration tests we do reuse the main app's DI/IoC Container because the way dependencies are resolved is part of the System Under Test (SUT). 
+
+### Mocking framework / performance
+
+Using `Moq` for its superior performance (e.g 3x to 10x faster than `NSubstitute` on initialisation, as measured by tests in July 2025).
+
+Be aware of test overheads, and avoid recreating instances of stateless objects for each test. Instead, make them global per test run. E.g. DomainGlossary. Since these are stateless dependencies, they don't interfere with the strict test isolation that's required. 
