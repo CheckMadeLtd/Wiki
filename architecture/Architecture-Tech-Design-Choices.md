@@ -137,3 +137,6 @@ For a useful distinction of the different object-graphs that can be constituted 
 
 This persistence strategy is designed to ensure our system remains scalable, flexible, and maintainable, leveraging generic and widely-used technologies and code-first patterns (like code-managed consistency, and LINQ for application-level queries). This will support our Vertical SaaS's USP while minimising risk of more exotic technologies (like event-sourcing-specific databases) or dead-ends one can manoeuvre into with frameworks (like sync frameworks or heavy O/RMs). Overall we seek to align with FP principles and avoid the SQL complexity-trap typically associated with schema / domain model evolution. 
 
+# IV) Stateless Architecture
+
+[This architectural review](2025-07-review-serverless-architecture.md) in July, 2025 has led to a reconfirmation of our stateless server-side architecture. 
