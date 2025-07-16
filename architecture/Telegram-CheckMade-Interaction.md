@@ -78,7 +78,7 @@ The `OutputSender` class (in `CheckMade.Bot.Telegram`) finally does the actual m
 
 Initially, we used InlineKeyboard only for statically determined commands and options (`ControlPrompts` and `DomainTerms`) and ReplyKeyboard for reply options determined dynamically (i.e. at runtime) e.g. sanitary camp selection. We then realised this distinction is very programmer-centric and meaningless for the user. Therefore the new guidance as follows:
 
-**In general, [`InlineKeyboard`](https://core.telegram.org/bots/features#inline-keyboards) is preferable and should be the default. **
+**In general, [`InlineKeyboard`](https://core.telegram.org/bots/features#inline-keyboards) is preferable and should be the default.**
 
 It's a better U.I. experience, stays attached to the prompt message, can be edited in-place (very fast) and allows parallel actions (if desired). For long list of options (e.g. sanitary camp selection), it offers the entire vertical screen space for scrolling (inside the chat window). 
 
