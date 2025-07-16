@@ -89,3 +89,5 @@ It's a better U.I. experience, stays attached to the prompt message, can be edit
 - [ForceReply](https://core.telegram.org/bots/api#forcereply), which forces the user to reply to a specific message from the Bot
   - Keeps the user focused on that reply, he can't do anything else
   - From a processing POW: allows us parsing out the message to which user replied (but not relevant when anyway saving dialogue state as CheckMade does)
+
+One caveat: there is a tension with this known [pitfall](https://github.com/CheckMadeLtd/Wiki/blob/main/pitfalls.md#medium-length-instruction). That might go away with our own app. 
