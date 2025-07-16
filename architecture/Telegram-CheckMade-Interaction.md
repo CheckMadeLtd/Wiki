@@ -1,10 +1,10 @@
-# 1. CheckMade vs. Telegram.Bot Namespace - Disambiguation / Conventions
+# I) CheckMade vs. Telegram.Bot Namespace - Disambiguation / Conventions
 
 It is important to disambiguate types in the `Telegram.Bot` namespace from types in the `CheckMade.Core` namespace. Some have overlapping names e.g. `ChatId`, denoting equivalent concepts. Ultimately, types in the `CheckMade.Core` namespace are meant to be agnostic to the specific choice of the underlying Bot technology choice (Telegram for now). The overlap happens where no abstraction from the Telegram implementation to the CheckMade domain seemed useful. 
 
 Furthermore, `Telegram.Bot`'s name for an incoming message from the user to the bot is `Update`. Once we converted it to our model representation, we call it `Input` (analogous to the response our function returns which is an `Output`). 
 
-# 2. I/O & Authentication Model
+# II) I/O & Authentication Model
 
 To understand the I/O between our software and Telegram (and thus our Bot's user interaction model), some mapping needs to take place between concepts/types on both ends. [This diagram](https://github.com/CheckMadeOrga/CheckMade/issues/60#issuecomment-2156138217) is an early attempt at visualising the mapping relationship and interface. While somewhat outdated, it serves to highlight two central ideas:
 
@@ -58,7 +58,7 @@ Note: a `LogicalPort` is only explicitly defined by the business logic when it d
 
 The `OutputSender` class (in `CheckMade.Bot.Telegram`) finally does the actual mapping from the `LogicalPort` it receives from the `CheckMade.Bot.Workflows` into the `Agent` it needs to resolve the right Telegram `BotClient` and send the `Output` to the correct chat on that client.  
 
-# 3. Telegram's MessageId Counter Logic
+# III) Telegram's MessageId Counter Logic
 
 - Super-Groups and Channels have their own `MessageId` counter, but are likely of no relevance to CheckMade.
 - For private chats and small groups, every Telegram account has its own counter.
@@ -71,3 +71,21 @@ The `OutputSender` class (in `CheckMade.Bot.Telegram`) finally does the actual m
 - --> To uniquely identify a message sent by a Bot and seen by a particular user, we need the combination of `ChatId` and `MessageId` (as reflected in our `WorkflowBridge` record). 
 
 **Careful:** if we will ever have groups with more than one of our Bots in them: in that case the SAME message would be represented by two different `MessageIds`, depending on which Bot's perspective we choose. It's an unlikely scenario for us though.
+
+# IV) Guide to Telegram Bot UI Elements
+
+## ReplyKeyboard vs. InlineKeyboard
+
+Initially, we used InlineKeyboard only for statically determined commands and options (`ControlPrompts` and `DomainTerms`) and ReplyKeyboard for reply options determined dynamically (i.e. at runtime) e.g. sanitary camp selection. We then realised this distinction is very programmer-centric and meaningless for the user. Therefore the new guidance as follows:
+
+**In general, [`InlineKeyboard`](https://core.telegram.org/bots/features#inline-keyboards) is preferable and should be the default. **
+
+It's a better U.I. experience, stays attached to the prompt message, can be edited in-place (very fast) and allows parallel actions (if desired). For long list of options (e.g. sanitary camp selection), it offers the entire vertical screen space for scrolling (inside the chat window). 
+
+[`ReplyKeyboard`](https://core.telegram.org/bots/features#keyboards) should only be used as an exception in the following very special/rare cases which are not covered by the `InlineKeyboard`:
+- When the user should be able to do both: 
+  - choose from predefined options AND 
+  - type in their own answer which is different from the options
+- [ForceReply](https://core.telegram.org/bots/api#forcereply), which forces the user to reply to a specific message from the Bot
+  - Keeps the user focused on that reply, he can't do anything else
+  - From a processing POW: allows us parsing out the message to which user replied (but not relevant when anyway saving dialogue state as CheckMade does)
