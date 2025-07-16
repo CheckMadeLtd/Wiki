@@ -10,6 +10,7 @@ We have encountered the following pitfalls in our project and document them to h
     - [Avoid Singletons that hold on to Scoped Services](#avoid-singletons-that-hold-on-to-scoped-services)
     - [Equality Operators](#equality-operators)
     - [Avoid switch expressions for instance creation based on runtime type parameter](#avoid-switch-expressions-for-instance-creation-based-on-runtime-type-parameter)
+    - [ServiceLocator Anti-Pattern: Fire-and-Forget Pitfall](#servicelocator-anti-pattern-fire-and-forget-pitfall)
   - [Telegram Bot](#telegram-bot)
     - [Avoid Telegram Bot API endless retry loop](#avoid-telegram-bot-api-endless-retry-loop)
     - [When stuck on `502 Bad Gateway` endless loop in ngrok](#when-stuck-on-502-bad-gateway-endless-loop-in-ngrok)
@@ -173,6 +174,9 @@ Instead, use `Activator.CreateInstance()` which works as long as the sub-types a
 
 This is the canonical case where the use of reflection is well justified.
 
+### ServiceLocator Anti-Pattern: Fire-and-Forget Pitfall
+
+The ServiceLocator anti-pattern becomes especially dangerous when implementing fire-and-forget operations that return HTTP responses quickly to enable parallel processing (as we have done in July 2025). When you return `OK` immediately and continue background work, the DI container disposes the request scope, making any subsequent `serviceProvider.GetRequiredService<T>()` calls throw `ObjectDisposedException`. Constructor-injected dependencies continue working because they're resolved during function instantiation and exist as object references, but ServiceLocator defers resolution until runtime method calls - which now happen after scope disposal. This creates subtle, hard-to-debug failures that only surface when background work attempts service resolution, making ServiceLocator particularly treacherous in high-throughput scenarios where quick responses and parallel processing are essential.
 
 ## Telegram Bot
 
