@@ -84,40 +84,30 @@ See [this detailed conversation](https://chat.openai.com/share/0b63fa31-cfca-44c
 ## Paradigm
 
 `From [WUTZ4]`
-- We use a relational database (Azure Cosmos DB for PostgreSQL) but with a very flat schema:
-  - Only the highest level domain aggregates / objects are represented in relational manner (e.g. festivals, camps, users, roles, messages) but all details are serialised into JSONB 'details' fields
-  - This minimises the need for risky and complex SQL migrations as the schema evolves (see also [DevOps> Schema Evolution](/devOPs/Schema-Evolution.md))
-  - Serialising details:
-    - Potentially includes lower level domain entities within aggregates
-    - Includes details of higher level domain entities (aggregates)
-    - Includes data streams from IoT or external plug-ins
-      - See [Azure Stream Analytics for PostgreSQL](https://learn.microsoft.com/en-gb/azure/cosmos-db/postgresql/howto-ingest-azure-stream-analytics)
-    - When historic details data needs to catch up with the schema's evolution, write separate software to migrate existing data into the newer format to keep it compatible and to keep the need for handling backwards compatibility away from our Repository objects (again, see: [DevOps> Schema Evolution](https://github.com/CheckMadeOrga/CheckMade/wiki/DevOps--Schema-Evolution)). 
-  - Leverage PostgreSQL's indexed, native and extensive support for JSONB queries
-    - [How to query a JSON column in PostgreSQL](https://popsql.com/learn-sql/postgresql/how-to-query-a-json-column-in-postgresql)
-    - [PostgreSQL Docs on JSONB Functions](https://www.postgresql.org/docs/9.4/functions-json.html)
+### Main DB is Azure Cosmos DB for PostgreSQL 
+- Serialising many of the (evolving) details of domain entities into JSONB fields to keep schema simple/flat where possible
+- => helps reduce the need for risky SQL migrations as the schema evolves (see also [DevOps> Schema Evolution](/devOPs/Schema-Evolution.md))
+- Viable thanks also to PostgreSQL's indexed, native and extensive support for JSONB queries
+  - [How to query a JSON column in PostgreSQL](https://popsql.com/learn-sql/postgresql/how-to-query-a-json-column-in-postgresql)
+  - [PostgreSQL Docs on JSONB Functions](https://www.postgresql.org/docs/9.4/functions-json.html)
+- In the future may also consider inclusion of IoT data streams, see [Azure Stream Analytics for PostgreSQL](https://learn.microsoft.com/en-gb/azure/cosmos-db/postgresql/howto-ingest-azure-stream-analytics) 
 
-- Event Sourcing for OPs and Updatable Details (favours functional programming compatibility)
-  - Applicable to:
-    - Data from everything normal users do as part of their operations
-      - Example: the current state of a todo-task is derived from the history of all messages / updates to / transitions in relation to that task, rather than saved explicitly.
-    - Updates of details  (e.g. value objects inside of domain entities)
-      - Example: update to address of a vendor serialised into 'events' i.e. every update to address gets serialised and stored as a new JSON string update.
-  - Not applicable to:
-    - High-level, 'setup-related' entities like festivals, venues, trades, vendors, users etc. 
+### Mixed paradigm: Event Sourcing vs. Classic 
+- Event Sourcing for operational data (supporting immutable domain model)
+  - The immutable domain model's state in memory is computed from the history of domain events as stored in DB
+- Classic for context (i.e. setup-related entities like LiveEvents, Venues, Users...)
+  - Benefiting from the classic relational model e.g. for query flexibility and performance
 
-- For future data warehousing:
-  - First, fully exploit analytic possibilities based on queries / views against the main OPs DB.
-  - Only when hitting performance or cost limits with that approach we shall partially denormalise / consolidate / deserialise data for reporting purposes into a separate custom warehouse db - possibly in the [Microsoft Fabric](https://www.microsoft.com/en-us/microsoft-fabric) / Power BI ecosystem. 
+### Explore data warehousing for future offline analytics:
+- First, fully exploit analytic possibilities based on queries / views against the main DB.
+- Only when hitting performance or cost limits with that approach we shall partially denormalise / consolidate / deserialise data for reporting purposes into a separate custom warehouse db - possibly in the [Microsoft Fabric](https://www.microsoft.com/en-us/microsoft-fabric) / Power BI ecosystem. 
 
+### Multi-Tenancy
 
-## Multi-Tenancy
-
-Do real multi-tenancy i.e. a single shared server instance AND single shared database! No in-between! See details in this [discussion](https://github.com/CheckMadeLtd/CheckMade/discussions/133).
+- Real multi-tenancy 
+  - i.e. a single shared server instance AND single shared database! No in-between! See details in this [discussion](https://github.com/CheckMadeLtd/CheckMade/discussions/133).
 
 ## Implementation Notes
-
-Last Updated 21/03/2025
 
 ### 1) No Data Access Layer (DAL)
 
