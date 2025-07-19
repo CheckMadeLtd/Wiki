@@ -21,3 +21,12 @@ For CheckMade, we increment the:
 Entire setup from scratch is scripted in the spirit of 'executable documentation'.
 
 See `setup_orchestrator.sh` (in DevOps/scripts/exe/setup/).
+
+## Azure Function Pricing / Lifetime / Toggle
+
+By default our function runs on the free Consumption Plan. 
+During events when we need high performance and avoidance of cold-start delays, we toggle to a premium plan with the help of `toggle_plan.sh`
+
+We tried using https://www.cron-job.org for a simple ping every 5 minutes to keep the Consumption Plan function alive, but this didn't work most likely due to Azure's aggressive and smart shut-down mechanism. So we will continue to toggle which is cleaner and fairer than starting to program fake activity per ping. 
+
+See [current pricing details](https://azure.microsoft.com/en-gb/pricing/details/functions/)
