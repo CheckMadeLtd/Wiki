@@ -129,4 +129,4 @@ This persistence strategy is designed to ensure our system remains scalable, fle
 
 # IV) Stateless Architecture
 
-[This architectural review](2025-07-review-serverless-architecture.md) in July, 2025 has led to a reconfirmation of our stateless server-side architecture. 
+[This architectural review](log/2025-07-review-serverless-architecture.md) in July, 2025 has led to a reconfirmation of our stateless server-side architecture. 
