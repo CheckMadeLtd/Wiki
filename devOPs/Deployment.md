@@ -43,4 +43,4 @@ While this is a setting of the function app (and not the hosting plan) it applie
 
 Practically this means we need to set it the first time when creating a new function app in the setup script (which would apply to the Consumption Plan) and a second time the first time we toggle to a Premium Plan. 
 
-For reasons of script simplicity, [we chose](https://github.com/CheckMadeLtd/CheckMade/issues/398#issuecomment-3092242991) to set it (redundantly) on every toggle to a Premium Plan, since its a cheap operation. 
+For reasons of script simplicity, [we chose](https://github.com/CheckMadeLtd/CheckMade/issues/398#issuecomment-3092242991) to set it (redundantly) on every toggle to a Premium Plan, since it's a cheap operation and script simplicity thus is more important. 
