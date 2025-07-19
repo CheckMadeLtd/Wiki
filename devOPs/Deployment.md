@@ -35,7 +35,7 @@ See [current pricing details](https://azure.microsoft.com/en-gb/pricing/details/
 
 ### ScaleLimit setting across hosting plans
 
-Until we haven't implemented [cache-safety with multiple instances](https://github.com/CheckMadeLtd/CheckMade/issues/394), we need to limit our function app to a single instance via the `functionAppScaleLimit` setting. 
+Until we haven't implemented [cache-safety with multiple instances](https://github.com/CheckMadeLtd/CheckMade/issues/394), we need to limit our function app to a single instance via the `functionAppScaleLimit` setting. This setting automatically applies to all deployment slots. 
 
 **Beware this pitfall:**  
   
