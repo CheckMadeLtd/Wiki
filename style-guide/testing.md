@@ -13,10 +13,10 @@
       - [3.1 Targeted-Integration Tests](#31-targeted-integration-tests)
       - [3.2 System-Integration Tests](#32-system-integration-tests)
     - [4. Acceptance Tests](#4-acceptance-tests)
-  - [Focus on Potential Failures](#focus-on-potential-failures)
-  - [Why no test-coverage tools?](#why-no-test-coverage-tools)
-  - [What about TDD?](#what-about-tdd)
   - [Test Implementation Guide](#test-implementation-guide)
+    - [Focus on Potential Failures](#focus-on-potential-failures)
+    - [Why no test-coverage tools?](#why-no-test-coverage-tools)
+    - [What about TDD?](#what-about-tdd)
     - [DI/IoC Container](#diioc-container)
     - [Mocking framework / performance](#mocking-framework--performance)
     - [Organisation of Test Project](#organisation-of-test-project)
@@ -31,7 +31,7 @@ At the same time, we explicitly avoid any Cargo Culting on tests: We will not bl
 
 For example, we believe a handful of intelligently and carefully crafted use-case and integration tests (covering most of the common workflows) will probably do more for our goal of fearless continuous deployment than thousands of very small unit tests with all their dependencies mocked. These are brittle and represent a huge amount of additional code that needs to be maintained, i.e. probably have an unfavourable cost/benefit ratio. 
 
-The following sections contain our nuanced categories of tests - these distinctions will give us a shared vocabulary and help guide in the intelligent and selective implementation of tests. The page ends with a few words test coverage tools and TDD.
+The following sections contain our nuanced categories of tests - these distinctions will give us a shared vocabulary and help guide in the intelligent and selective implementation of tests. This is followed by a more general Test Implementation Guide.
 
 ## CheckMade Test Types Taxonomy
 
@@ -106,7 +106,9 @@ The main purpose of these kind of tests is to ensure the application meets end-u
 
 We want to avoid the overhead of introducing dedicated BDD frameworks/syntax (like SpecFlow, Gherkin etc.), and thus aim at getting sufficient coverage on this front from the combination of our Workflow-Unit and System-Integration Tests plus manual click-throughs.
 
-## Focus on Potential Failures
+## Test Implementation Guide
+
+### Focus on Potential Failures
 
 Let's make deliberate attempts to explicitly cover edge-cases, error conditions, and boundary cases. We shall try hard to break the system, including working with broken assumptions to verify Design by Contract assertions throw where expected, invalid inputs are handled gracefully, and the system degrades predictably under stress.
 
@@ -118,7 +120,7 @@ This means thinking not just about the happy path, but systematically considerin
 - Do timeouts and retries work as expected?
 - Are resource limits respected?
 
-## Why no test-coverage tools?
+### Why no test-coverage tools?
 
 On a project created by 'test-infected' developers, where coverage will by default already be large, they don't add much value but create considerable overhead and distraction.
   
@@ -145,15 +147,13 @@ A happy-path test that never touches the `throw` branch of this statement still 
   
 ... time and attention that would be better spent thinking deeply about important boundary cases!
 
-## What about TDD?
+### What about TDD?
 
 Developers can decide for themselves whether they follow Test-Driven Development or whether they develop the tests after the production code. 
 
 Daniel's personal perspective:
 
 > "Despite advocacy by many of my programming heroes. This is one of the points where I side with John Ousterhout in his [epic debate](https://github.com/johnousterhout/aposd-vs-clean-code/blob/main/README.md?utm_source=substack&utm_medium=email) with Uncle Bob. In short, I found that the very tactical back- and forth between test code and production code, in seconds-long cycles as per true TDD, indeed distracted me from higher-level, design-oriented thinking in larger chunks."
-
-## Test Implementation Guide
 
 ### DI/IoC Container
 
