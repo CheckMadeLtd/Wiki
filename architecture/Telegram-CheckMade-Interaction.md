@@ -33,7 +33,7 @@ Group-chats with a Bot included can serve at least these two purposes:
 - Allowing more senior users to operate as multiple Agents i.e. in multiple Roles simultaneously. The groups would be given corresponding, meaningful titles. 
 - In the future potentially enabling actual direct chats between users, where the `CommunicationsBot` may act as a facilitator, participant and moderator (including possibly invite needed group members e.g. via `CreateChatInviteLinkAsync`).
 
-### 2) Agent to Role Binding
+### 2) Sessions (Agent to Role Bindings)
 
 **Fact-1**: An `Agent` exists independent of any connection to the CheckMade Setup.  
 => Anyone in the world can publicly find one of our bots and start a chat with it. 
@@ -43,7 +43,7 @@ Group-chats with a Bot included can serve at least these two purposes:
 
 In order for a `Role` to come alive, a real user on a real device in an actual chat (i.e. a `Agent`) needs to authenticate themselves with a token that is unique to a `Role` and that represents a secret held in the CheckMade Setup data. The secret token is passed to a real user via a secure channel (e.g. via a known communications link or orally on the venue).
 
-The successful authentication with this token uniquely binds the `Agent` to a `Role` and this binding is saved as a `AgentRoleBind` in the corresponding `agent_role_bindings` table. Each `AgentRoleBind`'s history is documented via an activation and deactivation date and a current status, which is important e.g. for later interpretation of raw input data.
+The successful authentication with this token uniquely binds the `Agent` to a `Role` and this binding is saved as a `Session` in the corresponding `sessions` table. Each `Session`'s history is documented via an activation and deactivation date and a current status, which is important e.g. for later interpretation of raw input data.
 
 This model implies that one and the same `User` can act in different capacities at the same time, by having more than one `Role` and operating via more than one `Agent`. E.g. user 'Lukas' can be the `Sanitary_Admin` for `LiveEvent` 'Hurricane 2024' via a group-chat (e.g. with id `-45213698`) while at the same time acting as `SiteCleaning_Admin` in another group-chat (e.g. with id `-75863214`) at the same (or even at a different) `LiveEvent`!
 
