@@ -28,7 +28,6 @@ When adding new projects to the solution, take note of the following items to ma
 
 1. Remove settings like 'Nullable' and 'ImplicitUsings' and 'TargetFramework' which are determined globally via Directory.Build.props
 2. Make sure the 'Configurations' property in the .csproj contains exactly those configs that actually build this project (the IDE seems to mess this up) + the No_Build config. For better understanding, see [this ChatGPT chat](https://chat.openai.com/share/bb173a38-dd60-40bd-9df5-e992ab6ed86c).
-3. Copy the Debug_ vs. Release compilation conditions from other Class Library projects (except for Test projects).  
 
 #### Workflows & Scripts
 
