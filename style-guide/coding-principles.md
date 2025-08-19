@@ -93,9 +93,11 @@ The main motivation for the use of a DI Container is avoiding manual object grap
 
 Sometimes referring to [Dependency Injection in .NET](https://www.goodreads.com/book/show/35055958-dependency-injection-in-net) (= 'DI PPP')
 
-- Avoid leaky abstraction into constructor parameters (pp. 273 in DI PPP), possible remedy: composites
+- Avoid leaky abstraction into constructor parameters (pp. 273 in DI PPP), e.g. using IEnumerable<T> (or other collection type) or Func<> in constructor injection
+  - Possible remedy: composites
 - Where object creation depends on a simple runtime value, avoid use of the factory pattern (instead use method injection). Only use factories to encapsulate complex object creation logic. For examples, see [Review my use of factories](https://github.com/CheckMadeLtd/CheckMade/issues/315)
-- Constructors with more than 4 or 5 dependencies --> check for over-injection. Possible remedy: facade
+- Constructors with more than 4 or 5 dependencies --> check for over-injection. 
+  - Possible remedy: facades
 
 
 ### Aspect-Oriented Programming (AOP)
