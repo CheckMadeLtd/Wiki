@@ -80,6 +80,8 @@ I use constructor injection for architectural dependencies:
 
 Interfaces are justified only when I actually have polymorphic behaviour or need to mock for testing or wrap implementations in Decorators, Virtual Proxies (etc.) — but never solely to enable injection! Thus, when there is no interface, I simply register the concrete type `.AsSelf()`.
 
+Where object creation depends on a simple runtime value, avoid use of the factory pattern (instead use method injection). Only use factories to encapsulate complex object creation logic. For examples, see [Review my use of factories](https://github.com/CheckMadeLtd/CheckMade/issues/315)
+
 Overall, my goal with this approach is maintaining loose coupling and testability where it adds genuine value while avoiding the complexity trap of over-abstraction, unnecessary indirection, and the ["noun bias" problem](https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html) where simple actions become wrapped in artificial object hierarchies.
 
 #### DI Container Libraries
