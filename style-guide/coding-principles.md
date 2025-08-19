@@ -11,6 +11,7 @@
     - [Depth vs Shortness of Functions](#depth-vs-shortness-of-functions)
     - [Dependency Injection](#dependency-injection)
       - [DI Container Libraries](#di-container-libraries)
+      - [A random collection of DI-related (anti-)patterns](#a-random-collection-of-di-related-anti-patterns)
     - [Aspect-Oriented Programming (AOP)](#aspect-oriented-programming-aop)
 
 
@@ -80,8 +81,6 @@ I use constructor injection for architectural dependencies:
 
 Interfaces are justified only when I actually have polymorphic behaviour or need to mock for testing or wrap implementations in Decorators, Virtual Proxies (etc.) — but never solely to enable injection! Thus, when there is no interface, I simply register the concrete type `.AsSelf()`.
 
-Where object creation depends on a simple runtime value, avoid use of the factory pattern (instead use method injection). Only use factories to encapsulate complex object creation logic. For examples, see [Review my use of factories](https://github.com/CheckMadeLtd/CheckMade/issues/315)
-
 Overall, my goal with this approach is maintaining loose coupling and testability where it adds genuine value while avoiding the complexity trap of over-abstraction, unnecessary indirection, and the ["noun bias" problem](https://steve-yegge.blogspot.com/2006/03/execution-in-kingdom-of-nouns.html) where simple actions become wrapped in artificial object hierarchies.
 
 #### DI Container Libraries
@@ -89,6 +88,15 @@ Overall, my goal with this approach is maintaining loose coupling and testabilit
 The above discussion relates only to the *technique* of DI, not to the *technology* facilitating it (i.e. DI Container Libraries). Here, my library of choice is `Autofac` (see [Why Autofac](https://mattburke.dev/why-autofac/)). I avoid 'sophisticated use', where regular business logic can do the job. For example, stick to default lifestyles, details see: [2024-04-26 DI Service Lifetime - My Defaults](https://github.com/CheckMadeLtd/CheckMade/discussions/382)
 
 The main motivation for the use of a DI Container is avoiding manual object graph compositions which represent a repetition of the information already contained in constructors. In large projects, I rely on auto-registration enabled by the `Convention over Configuration` pattern. 
+
+#### A random collection of DI-related (anti-)patterns
+
+Sometimes referring to [Dependency Injection in .NET](https://www.goodreads.com/book/show/35055958-dependency-injection-in-net) (= 'DI PPP')
+
+- Avoid leaky abstraction into constructor parameters (pp. 273 in DI PPP), possible remedy: composites
+- Where object creation depends on a simple runtime value, avoid use of the factory pattern (instead use method injection). Only use factories to encapsulate complex object creation logic. For examples, see [Review my use of factories](https://github.com/CheckMadeLtd/CheckMade/issues/315)
+- Constructors with more than 4 or 5 dependencies --> check for over-injection. Possible remedy: facade
+
 
 ### Aspect-Oriented Programming (AOP)
 
