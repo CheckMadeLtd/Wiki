@@ -93,7 +93,7 @@ The main motivation for the use of a DI Container is avoiding manual object grap
 
 Sometimes referring to [Dependency Injection in .NET](https://www.goodreads.com/book/show/35055958-dependency-injection-in-net) (= 'DI PPP')
 
-- Avoid leaky abstraction into constructor parameters (pp. 273 in DI PPP), e.g. using IEnumerable<T> (or other collection type) or Func<> in constructor injection
+- Avoid leaky abstraction into constructor parameters (pp. 273 in DI PPP), e.g. using IEnumerable<T> (or other collection type) or Func<> or Lazy<> etc. in constructor injection
   - Does not apply when T is a pure data structure
   - Possible remedy: composites
 - Where object creation depends on a simple runtime value, avoid use of the factory pattern (instead use method injection). Only use factories to encapsulate complex object creation logic. For examples, see [Review my use of factories](https://github.com/CheckMadeLtd/CheckMade/issues/315)
