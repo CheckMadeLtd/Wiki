@@ -130,7 +130,7 @@ In conclusion, we carefully choose the appropriate type/patterns/tools in the sp
 
 ## Guide on Types: Class/Struct/Record
 
-C# offers a rich selection of types and it wasn't obvious to me how to choose best to support my FP-oriented, mixed paradigm approach to programming. Leaving aside fairly clear cut types like `interface` and `enum`, I have created the following guide  to help me choose appropriately between `class`, `struct`, `record`, `record struct` and the use of the `readonly` modifier on structs. 
+C# offers a rich selection of types and it may not always be obvious how to choose best to support our FP-oriented, mixed paradigm approach to programming. Leaving aside fairly clear cut types like `interface` and `enum`, the following guide will help us choose appropriately between `class`, `struct`, `record`, `record struct` and the use of the `readonly` modifier on structs. 
 
 This guide is based on the underlying insight of the orthogonality between these keywords (as reflected in the following tables).
 
