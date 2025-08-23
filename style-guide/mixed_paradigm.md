@@ -12,9 +12,9 @@
       - [Alternate](#alternate)
       - [Transduce](#transduce)
   - [Immutable Collections in C##](#immutable-collections-in-c)
-    - [1. What does immutability actually mean in C#?](#1-what-does-immutability-actually-mean-in-c)
-    - [2. What are the performance implications of using immutable collections and how to deal with them?](#2-what-are-the-performance-implications-of-using-immutable-collections-and-how-to-deal-with-them)
-    - [3. To avoid any potential for dogma or Cargo Cult around this: when do we actually benefit from the use of immutable collections?](#3-to-avoid-any-potential-for-dogma-or-cargo-cult-around-this-when-do-we-actually-benefit-from-the-use-of-immutable-collections)
+    - [1. Nuanced Review of Immutability in C#](#1-nuanced-review-of-immutability-in-c)
+    - [2. Avoiding Cargo Cult / CheckMade Defaults](#2-avoiding-cargo-cult--checkmade-defaults)
+    - [3. Performance Implications](#3-performance-implications)
   - [Guide on Types: Class/Struct/Record](#guide-on-types-classstructrecord)
     - [The 6 Possible Permutations](#the-6-possible-permutations)
     - [Defining Features](#defining-features)
@@ -79,9 +79,9 @@ I use the following combinators as part of my custom language extensions for ele
 
 ## Immutable Collections in C##
 
-In line with FP, we care about immutability of our collections. Immediately, three issues/questions arise though:
+In line with FP, we care about immutability of our collections...
 
-### 1. What does immutability actually mean in C#?
+### 1. Nuanced Review of Immutability in C#
 
 In my mind, there are three aspects of immutability in a collection that are completely orthogonal and thus need to be treated separately. Let's explore by starting out with the seemingly obvious choice of `ImmutableList<T>` (which, it turns out, we end up hardly using)...
 
@@ -101,30 +101,32 @@ In this case having `ImmutableList<T>` as the underlying type is not sufficient 
 
 Beware however, that this still offers no guarantee, because the consuming developer can simply cast back to `ImmutableList<T>`, making mutation methods available again. When a real guarantee of this kind is needed, the underlying collection would have to be wrapped in a `ReadOnlyCollection` type (can be achieved by calling `.AsReadOnly()` on the collection) - now the same attempt to cast leads to a compile-time error. 
 
-### 2. What are the performance implications of using immutable collections and how to deal with them?
-
-Writing to and reading from an `ImmutableList<T>` is one to two orders of magnitudes slower than `List<T>`, for large collections this can be significant. If we know that no (or hardly no) writes are needed, an `ImmutableArray<T>` offers full, mutable read performance (and even more terrible write performance). 
-
-If we need a Set or Dictionary instead of a List and no writing is needed then `FrozenSet` and `FrozenDictionary` (from .NET 8) offer highly optimised read performance. And when batch mutating any immutable type (e.g. in a loop), simply use the `Builder` before converting back to the immutable type. 
-
-In conclusion, I carefully choose the appropriate type/pattern in the spirit of avoiding premature pessimisation. 
-
-### 3. To avoid any potential for dogma or Cargo Cult around this: when do we actually benefit from the use of immutable collections?
+### 2. Avoiding Cargo Cult / CheckMade Defaults
 
 The distinctions introduced above lead to the imperative to understand where we actually need 'immutability' - and apply it at the right levels. This helps avoid premature pessimisation in terms of the involved performance penalties. 
 
 At CheckMade, there generally is no need for using any immutability for locally scoped collections which are not passed to other modules (implementation details) and where there is no chance of multi-threaded / shared access (i.e. our default of single threaded code within a object scoped within a single function invocation).
 
-For those collections that get passed across module boundaries (but stay within our request-scoped, thread-safe environment) our default is to guarantee immutability only from the perspective of the consumer, but maintain mutability in the producer's code - i.e. we simply wrap the collection in a `ReadOnlyCollection` (usually by calling `.AsReadOnly()` on it). A frequent use-case is faithfully representing events from an Event Sourcing datastore. 
+For those collections that get passed across module boundaries (but stay within our request-scoped, thread-safe environment) our default is to guarantee immutability only from the perspective of the consumer, but maintain mutability in the producer's code - i.e. we simply wrap the collection in a `ReadOnlyCollection` (usually by calling `.AsReadOnly()` on it). A frequent use-case is faithfully representing (and operating on) events from our Event Sourcing datastore. 
 
-Besides keeping flexibility for the producer, this also avoids (unnecessary) performance penalties (note that `ReadOnlyCollection` provides the consumer with a transparent view to the wrapped collection - as the producer mutates it, the consumer sees the updated version). This approach is sufficient to provide us with many of the desired immutability-related benefits. 
+Besides keeping flexibility for the producer, this also avoids (unnecessary) performance penalties (note that `ReadOnlyCollection` provides the consumer with a transparent view to the wrapped collection - as the producer mutates it, the consumer sees the updated version). This approach is sufficient to provide us with most of the desired immutability benefits in our small-team, mono-repo project. 
 
-There may be rare cases where full immutability is necessary, e.g. if any one of the following applies:
-- Guaranteed Snapshot Semantics are needed
+There may be rare cases, however, where full immutability is necessary, e.g. if any one of the following applies:
+- Guaranteed snapshot semantics are needed
 - It cannot be ruled out that the consumer runs on a different thread than the producer (and no synchronisation is in place)
 - Performance-optimised equality comparisons are required (once computed hash codes can simply be cached)
 
-In such cases, we must also protect against accidental mutation in the producer and thus need to utilise any of the immutable collection types (like `ImmutableList<T>`) in addition to wrapping them in `ReadOnlyCollection`. In case of Sets and Dictionaries, the new `FrozenSet` and `FrozenDictionary` represent an attractive alternative here, as they offer a) highly performant reads and b) no mutation methods (and thus no need to wrap in `ReadOnlyCollection` before passing on). 
+In such cases, we must also protect against accidental mutation in the producer and thus need to utilise any of the immutable collection types (like `ImmutableList<T>`) in addition to wrapping them in `ReadOnlyCollection`. That's when the following notes on performance become relevant... 
+
+### 3. Performance Implications
+
+Writing to and reading from an `ImmutableList<T>` is one to two orders of magnitudes slower than `List<T>`, for large collections this can be significant. If we know that no (or hardly no) writes are needed, an `ImmutableArray<T>` offers full, mutable read performance (and even more terrible write performance). 
+
+If we need a Set or Dictionary instead of a List and no writing is needed then `FrozenSet` and `FrozenDictionary` (from .NET 8) offer highly optimised read performance and allow achieving 'aspect-3' without the need for wrapping in `ReadOnlyCollection`. 
+
+When batch mutating any immutable type (e.g. in a loop), simply use the `Builder` before converting back to the immutable type. 
+
+In conclusion, we carefully choose the appropriate type/patterns/tools in the spirit of avoiding premature pessimisation. 
 
 ## Guide on Types: Class/Struct/Record
 
