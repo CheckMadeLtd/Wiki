@@ -11,7 +11,7 @@
       - [Fork](#fork)
       - [Alternate](#alternate)
       - [Transduce](#transduce)
-  - [Immutable Collections in C##](#immutable-collections-in-c)
+  - [Immutable Collections in C#](#immutable-collections-in-c)
     - [1. Nuanced Review of Immutability in C#](#1-nuanced-review-of-immutability-in-c)
     - [2. Avoiding Cargo Cult / CheckMade Defaults](#2-avoiding-cargo-cult--checkmade-defaults)
     - [3. Performance Implications](#3-performance-implications)
@@ -77,7 +77,7 @@ I use the following combinators as part of my custom language extensions for ele
 #### Transduce
 `Transduce<TIn, TFilterOut, TFinalOut>(this IEnumerable<TIn> @this, Func<IEnumerable<TIn>, IEnumerable<TFilterOut>> transformer, Func<IEnumerable<TFilterOut>, TFinalOut> aggregator)` - Combines transformation and aggregation operations on collections into a single step, optimizing memory usage by avoiding the creation of intermediate collections.
 
-## Immutable Collections in C##
+## Immutable Collections in C#
 
 In line with FP, we care about immutability of our collections...
 
