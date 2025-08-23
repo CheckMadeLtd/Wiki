@@ -79,11 +79,11 @@ I use the following combinators as part of my custom language extensions for ele
 
 ## Immutable Collections in C##
 
-In line with FP, I design for many of my collections (Lists, Sets, Dictionaries...) to be immutable. Immediately, three issues/questions arise though:
+In line with FP, we care about immutability of our collections. Immediately, three issues/questions arise though:
 
 ### 1. What does immutability actually mean in C#?
 
-In my mind, there are three aspects of immutability in a collection that are completely orthogonal and thus need to be treated separately. Let's explore by starting out with the obvious choice of `ImmutableList<T>`...
+In my mind, there are three aspects of immutability in a collection that are completely orthogonal and thus need to be treated separately. Let's explore by starting out with the seemingly obvious choice of `ImmutableList<T>` (which, it turns out, we end up hardly using)...
 
 **Aspect-1: Immutability of Items** 
 
@@ -95,10 +95,11 @@ Developers can still call `.Add()` or `.Remove()` on our ImmutableList for non-d
 
 **Aspect-3: Conceptual Immutability of the Collection**
 
-What if the intended immutability is about protecting against other developers' ability to perform  non-destructive mutation? That might be called for in case the collection represents some immutable concept whose integrity must be preserved throughout an application's lifetime (e.g. a fixed menu of operations). In this case having `ImmutableList<T>` as the underlying type is not sufficient and the API needs to, at least, expose / return it via the `IReadOnlyList<T>` interface, which doesn't offer developers mutation methods. It offers no guarantee, however, because a downcast e.g. to `IList<T>` is possible, making mutation methods available again. In rare cases, when a real guarantee is needed, the underlying collection would have to be wrapped in a `ReadOnlyCollection` type which can't be downcast.
+What if the intended immutability is mainly about protecting against developers' ability to perform non-destructive mutation? That might be called for in case the collection represents some immutable concept whose integrity must be preserved throughout an application's lifetime (e.g. a fixed menu of operations). 
 
-In case of Sets and Dictionaries, a `FrozenSet` and `FrozenDictionary` can be used since .NET 8 which also don't offer mutation methods. 
+In this case having `ImmutableList<T>` as the underlying type is not sufficient and the API needs to, at least, expose / return it via the `IReadOnlyList<T>` interface, which doesn't offer developers mutation methods. 
 
+Beware however, that this still offers no guarantee, because the consuming developer can simply cast back to `ImmutableList<T>`, making mutation methods available again. When a real guarantee of this kind is needed, the underlying collection would have to be wrapped in a `ReadOnlyCollection` type (can be achieved by calling `.AsReadOnly()` on the collection) - now the same attempt to cast leads to a compile-time error. 
 
 ### 2. What are the performance implications of using immutable collections and how to deal with them?
 
@@ -110,18 +111,20 @@ In conclusion, I carefully choose the appropriate type/pattern in the spirit of 
 
 ### 3. To avoid any potential for dogma or Cargo Cult around this: when do we actually benefit from the use of immutable collections?
 
-I have come to the conclusion that there is no need for using immutability for locally scoped, private collections which are not passed to other modules and where there is no chance of multi-threaded / shared access (e.g. in single threaded code within a object scoped within a single function invocation). This description may well fit a large majority of collections in a code base. 
+The distinctions introduced above lead to the imperative to understand where we actually need 'immutability' - and apply it at the right levels. This helps avoid premature pessimisation in terms of the involved performance penalties. 
 
-When all three of the following conditions are met, it is sufficient to call `.AsReadOnly` on a normal, mutable collection before passing it over a module boundary:  
-- a) 'Aspect-3' conceptual immutability needs to be enforced/guaranteed in the calling code AND  
-- b) the home class of this collection needs to retain the ability to modify the original collection OR the performance OR code conciseness of default mutable collections are desired AND  
-- c) thread-safety is of no concern because it is guaranteed that the calling/consuming code runs on the same thread as the home class
+At CheckMade, there generally is no need for using any immutability for locally scoped collections which are not passed to other modules (implementation details) and where there is no chance of multi-threaded / shared access (i.e. our default of single threaded code within a object scoped within a single function invocation).
 
-In all other cases, I use immutable collections (covering an appropriate selection from the three immutability aspects described above). Examples where it's especially relevant are:
-- when passing collections across module/class boundaries and 'Snapshot Semantics' are thus desirable
-- when there is a chance for multi-threaded access without any synchronisation
-- when representing events from an Event Sourcing datastore
-- when efficient equality comparisons are needed (once computed hash codes can simply be cached)
+For those collections that get passed across module boundaries (but stay within our request-scoped, thread-safe environment) our default is to guarantee immutability only from the perspective of the consumer, but maintain mutability in the producer's code - i.e. we simply wrap the collection in a `ReadOnlyCollection` (usually by calling `.AsReadOnly()` on it). A frequent use-case is faithfully representing events from an Event Sourcing datastore. 
+
+Besides keeping flexibility for the producer, this also avoids (unnecessary) performance penalties (note that `ReadOnlyCollection` provides the consumer with a transparent view to the wrapped collection - as the producer mutates it, the consumer sees the updated version). This approach is sufficient to provide us with many of the desired immutability-related benefits. 
+
+There may be rare cases where full immutability is necessary, e.g. if any one of the following applies:
+- Guaranteed Snapshot Semantics are needed
+- It cannot be ruled out that the consumer runs on a different thread than the producer (and no synchronisation is in place)
+- Performance-optimised equality comparisons are required (once computed hash codes can simply be cached)
+
+In such cases, we must also protect against accidental mutation in the producer and thus need to utilise any of the immutable collection types (like `ImmutableList<T>`) in addition to wrapping them in `ReadOnlyCollection`. In case of Sets and Dictionaries, the new `FrozenSet` and `FrozenDictionary` represent an attractive alternative here, as they offer a) highly performant reads and b) no mutation methods (and thus no need to wrap in `ReadOnlyCollection` before passing on). 
 
 ## Guide on Types: Class/Struct/Record
 
